@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { api } from "../api";
+import toast from "react-hot-toast";
 
 const AuthContext = createContext();
 
@@ -23,6 +24,7 @@ export function AuthProvider({ children }) {
   // Login
   const login = async (email, password) => {
     const res = await api.post("/auth/login", { email, password });
+    toast.success("Login successful!");
     localStorage.setItem("sweetmart_token", res.data.data.token);
 
     const me = await api.get("/auth/me");
