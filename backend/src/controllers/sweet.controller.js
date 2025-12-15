@@ -64,6 +64,66 @@ exports.getAllSweets = async (req, res) => {
   }
 };
 
+exports.addReview = async (req, res) => {
+  try {
+    const { rating, comment } = req.body;
+    const sweetId = req.params.id;
+    const userId = req.user._id;
+    const userName = req.user.name;
+
+    const sweet = await Sweet.findById(sweetId);
+
+    if (!sweet) {
+      return res.status(404).json({
+        success: false,
+        message: "Sweet not found",
+      });
+    }
+
+    // Check if user already reviewed
+    const alreadyReviewed = sweet.reviews.find(
+      (review) => review.user.toString() === userId.toString()
+    );
+
+    if (alreadyReviewed) {
+      return res.status(400).json({
+        success: false,
+        message: "You have already reviewed this product",
+      });
+    }
+
+    // Add new review
+    const review = {
+      user: userId,
+      name: userName,
+      rating: Number(rating),
+      comment,
+      createdAt: Date.now(),
+    };
+
+    sweet.reviews.push(review);
+
+    // Update rating count and average
+    sweet.rating.count = sweet.reviews.length;
+    sweet.rating.average =
+      sweet.reviews.reduce((acc, item) => item.rating + acc, 0) /
+      sweet.reviews.length;
+
+    await sweet.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Review added successfully",
+      data: sweet,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 exports.getSweetById = async (req, res) => {
   try {
     const sweet = await Sweet.findById(req.params.id)

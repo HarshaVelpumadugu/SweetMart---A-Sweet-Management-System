@@ -1,12 +1,15 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { Star } from "lucide-react";
 
 export default function SweetCard({ item }) {
   const { addItem } = useCart();
+  const navigate = useNavigate();
 
   const addToCartHandler = async () => {
     try {
-      await addItem(item._id, 1); // updates cart + count automatically
+      await addItem(item._id, 1);
     } catch (error) {
       console.error("Add to cart error:", error);
     }
@@ -14,9 +17,20 @@ export default function SweetCard({ item }) {
 
   return (
     <motion.div
-      className="bg-white rounded-xl shadow-lg p-3 hover:shadow-xl transition-all relative max-w-[280px]"
+      className="bg-white rounded-xl shadow-lg p-3 hover:shadow-xl transition-all relative max-w-[280px] cursor-pointer"
       whileHover={{ scale: 1.03 }}
+      onClick={() => navigate(`/sweet/${item._id}`)}
     >
+      {/* Rating Badge - Top Right */}
+      {item.rating && item.rating.count > 0 && (
+        <div className="absolute top-5 right-5 bg-green-700 text-white px-2 py-1 rounded-lg flex items-center gap-1 shadow-md z-10">
+          <Star className="w-4 h-4 fill-white" />
+          <span className="text-sm font-bold">
+            {item.rating.average.toFixed(1)}
+          </span>
+        </div>
+      )}
+
       <img
         src={item.imageUrl}
         alt={item.name}
@@ -46,8 +60,18 @@ export default function SweetCard({ item }) {
         </div>
       </div>
 
+      {/* Rating Count */}
+      {item.rating && item.rating.count > 0 && (
+        <p className="text-xs text-gray-500 mt-1">
+          ({item.rating.count} {item.rating.count === 1 ? "review" : "reviews"})
+        </p>
+      )}
+
       <button
-        onClick={addToCartHandler}
+        onClick={(e) => {
+          e.stopPropagation();
+          addToCartHandler();
+        }}
         disabled={item.quantity === 0}
         className={`mt-3 w-full py-2 rounded-lg text-sm font-semibold text-white transition-colors ${
           item.quantity === 0

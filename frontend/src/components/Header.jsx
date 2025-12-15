@@ -133,6 +133,13 @@ const Header = () => {
             >
               Explore
             </a>
+
+            <Link
+              to="/search"
+              className="font-medium text-gray-700 hover:text-green-700 active:text-green-800 transition-colors"
+            >
+              Search
+            </Link>
           </nav>
 
           {/* ACTIONS */}
@@ -224,6 +231,13 @@ const Header = () => {
               >
                 Explore
               </a>
+
+              <Link
+                to="/search"
+                className="px-4 py-2 font-medium text-gray-700 hover:text-green-700"
+              >
+                Search
+              </Link>
 
               {user ? (
                 <>

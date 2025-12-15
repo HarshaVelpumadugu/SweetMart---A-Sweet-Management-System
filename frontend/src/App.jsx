@@ -11,6 +11,8 @@ import AdminDashboard from "./pages/AdminDashboard.jsx";
 import SweetForm from "./pages/SweetForm.jsx";
 import Cart from "./pages/Cart.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import SweetDetailPage from "./pages/SweetDetail.jsx";
+import SearchPage from "./pages/SearchPage.jsx";
 
 export default function App() {
   return (
@@ -25,6 +27,8 @@ export default function App() {
               <Route path="/category/:category" element={<CategoryPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/sweet/:id" element={<SweetDetailPage />} />
+              <Route path="/search" element={<SearchPage />} />
 
               {/* Protected Admin Routes */}
               <Route
