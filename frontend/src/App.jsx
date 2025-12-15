@@ -25,9 +25,9 @@ export default function App() {
           <Toaster
   position="top-right"
   toastOptions={{
-    duration: 3000,
+    duration: 7000,
     style: {
-      fontSize: "14px",
+      fontSize: "18px",
     },
   }}
 />
