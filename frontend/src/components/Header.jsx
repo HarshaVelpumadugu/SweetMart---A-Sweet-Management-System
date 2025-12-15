@@ -1,13 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import {
-  ShoppingCart,
-  Menu,
-  X,
-  LogOut,
-  Package,
-  ShieldCheck,
-} from "lucide-react";
+import { ShoppingCart, Menu, X, LogOut, ShieldCheck } from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
 
@@ -97,6 +90,9 @@ const Header = () => {
     setIsMobileMenuOpen(false);
   };
 
+  // Check if user is a regular user (not admin or owner)
+  const isRegularUser = user && user.role === "user";
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -154,17 +150,19 @@ const Header = () => {
                   </Link>
                 )}
 
-                {/* CART */}
-                <Link to="/cart" className="relative">
-                  <Button variant="ghost" size="icon">
-                    <ShoppingCart className="h-5 w-5" />
-                    {count > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-green-700 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                        {count}
-                      </span>
-                    )}
-                  </Button>
-                </Link>
+                {/* CART - Only show for regular users */}
+                {isRegularUser && (
+                  <Link to="/cart" className="relative">
+                    <Button variant="ghost" size="icon">
+                      <ShoppingCart className="h-5 w-5" />
+                      {count > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-green-700 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                          {count}
+                        </span>
+                      )}
+                    </Button>
+                  </Link>
+                )}
 
                 {/* USER + LOGOUT */}
                 <div className="flex items-center gap-2">
@@ -235,6 +233,7 @@ const Header = () => {
               <Link
                 to="/search"
                 className="px-4 py-2 font-medium text-gray-700 hover:text-green-700"
+                onClick={closeMobileMenu}
               >
                 Search
               </Link>
@@ -252,22 +251,24 @@ const Header = () => {
                     </Link>
                   )}
 
-                  {/* CART - Fixed positioning */}
-                  <Link
-                    to="/cart"
-                    className="px-4 py-2 font-medium text-gray-700 hover:text-green-700 flex items-center gap-2"
-                    onClick={closeMobileMenu}
-                  >
-                    <div className="relative">
-                      <ShoppingCart className="h-5 w-5" />
-                      {count > 0 && (
-                        <span className="absolute -top-2 -right-2 bg-green-700 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                          {count}
-                        </span>
-                      )}
-                    </div>
-                    <span>Cart</span>
-                  </Link>
+                  {/* CART - Only show for regular users */}
+                  {isRegularUser && (
+                    <Link
+                      to="/cart"
+                      className="px-4 py-2 font-medium text-gray-700 hover:text-green-700 flex items-center gap-2"
+                      onClick={closeMobileMenu}
+                    >
+                      <div className="relative">
+                        <ShoppingCart className="h-5 w-5" />
+                        {count > 0 && (
+                          <span className="absolute -top-2 -right-2 bg-green-700 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                            {count}
+                          </span>
+                        )}
+                      </div>
+                      <span>Cart</span>
+                    </Link>
+                  )}
 
                   <button
                     className="px-4 py-2 font-medium text-left text-gray-700 hover:text-red-600 flex items-center gap-2"

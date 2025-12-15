@@ -9,17 +9,15 @@ const {
   getCartCount,
 } = require("../controllers/cart.controller");
 const { protect } = require("../middleware/auth.middleware");
+const { authorize } = require("../middleware/roles.middleware");
 
 // All routes are protected
 
-router.get("/count", protect, getCartCount);
-router.post("/items", protect, addToCart);
-router.put("/items/:itemId", protect, updateCartItem);
-router.delete("/items/:itemId", protect, removeFromCart);
-router.get("/test", (req, res) => {
-  res.json({ message: "Cart routes working" });
-});
-router.get("/", protect, getCart);
-router.delete("/", protect, clearCart);
+router.get("/count", protect, authorize("user"), getCartCount);
+router.post("/items", protect, authorize("user"), addToCart);
+router.put("/items/:itemId", protect, authorize("user"), updateCartItem);
+router.delete("/items/:itemId", protect, authorize("user"), removeFromCart);
+router.get("/", protect, authorize("user"), getCart);
+router.delete("/", protect, authorize("user"), clearCart);
 
 module.exports = router;

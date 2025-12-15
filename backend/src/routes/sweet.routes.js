@@ -23,7 +23,13 @@ router.get("/category/:category", getSweetsByCategory);
 router.get("/:id", getSweetById);
 
 // Protected routes
-router.post("/:id/reviews", protect, validateReview, addReview);
+router.post(
+  "/:id/reviews",
+  protect,
+  authorize("user"),
+  validateReview,
+  addReview
+);
 
 // Owner/Admin routes
 router.post(

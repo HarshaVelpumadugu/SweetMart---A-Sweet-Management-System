@@ -15,9 +15,9 @@ const { validateOrder } = require("../utils/validators");
 // Protected routes
 router.use(protect);
 
-router.post("/", validateOrder, createOrder);
-router.get("/my-orders", getUserOrders);
-router.get("/:id", getOrderById);
+router.post("/", validateOrder, authorize("user"), createOrder);
+router.get("/my-orders", authorize("user"), getUserOrders);
+router.get("/:id", authorize("user"), getOrderById);
 
 // Owner/Admin routes
 router.get("/all/list", authorize("owner", "admin"), getAllOrders);
