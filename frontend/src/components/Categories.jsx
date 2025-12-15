@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const categories = [
   "cake",
@@ -25,14 +26,14 @@ export default function Categories() {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
         {categories.map((cat) => (
-          <motion.a
-            key={cat}
-            href={`/category/${cat}`}
-            whileHover={{ scale: 1.08 }}
-            className="bg-white p-4 sm:p-6 md:p-8 lg:p-10 text-center shadow-lg sm:shadow-xl rounded-xl sm:rounded-2xl text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-green-700 hover:shadow-2xl transition-all"
-          >
-            {cat}
-          </motion.a>
+          <Link key={cat} to={`/category/${cat}`}>
+            <motion.div
+              whileHover={{ scale: 1.08 }}
+              className="bg-white p-4 sm:p-6 md:p-8 lg:p-10 text-center shadow-lg sm:shadow-xl rounded-xl sm:rounded-2xl text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-green-700 hover:shadow-2xl transition-all cursor-pointer"
+            >
+              {cat}
+            </motion.div>
+          </Link>
         ))}
       </div>
     </section>
