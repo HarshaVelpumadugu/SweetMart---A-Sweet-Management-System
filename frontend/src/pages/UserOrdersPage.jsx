@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Header from "../components/Header";
 import { api } from "../api";
+import toast from "react-hot-toast";
 
 export default function MyOrders() {
   const [orders, setOrders] = useState([]);
@@ -29,6 +30,10 @@ export default function MyOrders() {
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to load orders. Please try again."
+      );
     } finally {
       setLoading(false);
     }

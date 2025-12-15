@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { api } from "../api";
 import { useCart } from "../context/CartContext";
 import { Star, ArrowLeft } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function SweetDetailPage() {
   const { id } = useParams();
@@ -15,17 +16,30 @@ export default function SweetDetailPage() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    api.get(`/sweets/${id}`).then((res) => {
-      setSweet(res.data.data);
-      setLoading(false);
-    });
+    api
+      .get(`/sweets/${id}`)
+      .then((res) => {
+        setSweet(res.data.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching sweet:", error);
+        toast.error(
+          error.response?.data?.message || "Failed to load sweet details"
+        );
+        setLoading(false);
+      });
   }, [id, refreshTrigger]);
 
   const handleAddToCart = async () => {
     try {
       await addItem(sweet._id, 1);
+      toast.success(`${sweet.name} added to cart! 🛒`);
     } catch (error) {
       console.error("Add to cart error:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to add item to cart"
+      );
     }
   };
 
@@ -33,16 +47,23 @@ export default function SweetDetailPage() {
     e.preventDefault();
     setSubmitting(true);
 
+    const toastId = toast.loading("Submitting review...");
+
     try {
       await api.post(`/sweets/${id}/reviews`, { rating, comment });
+
       // Refresh sweet data to show new review
       const res = await api.get(`/sweets/${id}`);
       setSweet(res.data.data);
       setComment("");
       setRating(5);
-      alert("Review submitted successfully!");
+
+      toast.success("Review submitted successfully! ⭐", { id: toastId });
     } catch (error) {
-      alert(error.response?.data?.message || "Failed to submit review");
+      console.error("Review error:", error);
+      toast.error(error.response?.data?.message || "Failed to submit review", {
+        id: toastId,
+      });
     } finally {
       setSubmitting(false);
     }

@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api";
+import toast from "react-hot-toast";
 
 export default function AdminDashboard() {
   const [sweets, setSweets] = useState([]);
 
   useEffect(() => {
-    api.get("/sweets").then((res) => setSweets(res.data.data));
+    api
+      .get("/sweets")
+      .then((res) => {
+        setSweets(res.data.data);
+        toast.success("Sweets loaded successfully!");
+      })
+      .catch((error) => {
+        toast.error("Failed to load sweets. Please try again.");
+        console.error("Error fetching sweets:", error);
+      });
   }, []);
 
   return (

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Header from "../components/Header";
 import { api } from "../api";
+import toast from "react-hot-toast";
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
@@ -32,9 +33,14 @@ export default function AdminOrders() {
         setOrders(data.data);
         setTotalPages(data.totalPages);
         setTotalOrders(data.total);
+        // Only show success toast on initial load (page 1) to avoid spam
+        if (currentPage === 1 && filter === "all" && !dateFilter.start) {
+          toast.success(`Loaded ${data.total} orders successfully`);
+        }
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
+      toast.error(error.response?.data?.message || "Failed to load orders");
     } finally {
       setLoading(false);
     }
@@ -49,11 +55,14 @@ export default function AdminOrders() {
       });
 
       if (data.success) {
+        toast.success(`Order status updated to ${newStatus}`);
         fetchOrders();
       }
     } catch (error) {
       console.error("Error updating order:", error);
-      alert(error.response?.data?.message || "Failed to update order status");
+      toast.error(
+        error.response?.data?.message || "Failed to update order status"
+      );
     } finally {
       setUpdatingStatus(null);
     }

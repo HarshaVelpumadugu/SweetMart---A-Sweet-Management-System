@@ -15,12 +15,14 @@ import SweetDetailPage from "./pages/SweetDetail.jsx";
 import SearchPage from "./pages/SearchPage.jsx";
 import AdminOrders from "./pages/AdminOrderPage.jsx";
 import MyOrders from "./pages/UserOrdersPage.jsx";
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
   return (
     <AuthProvider>
       <CartProvider>
         <BrowserRouter>
+          <Toaster />
           <Header />
           <Routes>
             {/* Public Pages */}

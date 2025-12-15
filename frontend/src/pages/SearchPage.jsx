@@ -13,6 +13,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
 
 export default function SearchPage() {
   const navigate = useNavigate();
@@ -97,8 +98,21 @@ export default function SearchPage() {
       const res = await api.get("/sweets", { params });
       setSweets(res.data.data);
       setTotalPages(res.data.totalPages);
+
+      // Optional: Show info if no results found
+      if (res.data.data.length === 0 && currentPage === 1) {
+        if (searchQuery) {
+          toast.info(`No sweets found for "${searchQuery}"`);
+        } else if (selectedCategory) {
+          toast.info(`No sweets found in ${selectedCategory} category`);
+        }
+      }
     } catch (error) {
       console.error("Error fetching sweets:", error);
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to load sweets. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -110,6 +124,7 @@ export default function SearchPage() {
       setTopRated(res.data.data);
     } catch (error) {
       console.error("Error fetching top rated:", error);
+      toast.error("Failed to load top rated sweets");
     }
   };
 
@@ -367,4 +382,3 @@ export default function SearchPage() {
     </div>
   );
 }
-

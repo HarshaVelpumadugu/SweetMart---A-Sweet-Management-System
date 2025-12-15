@@ -3,6 +3,7 @@ import { useCart } from "../context/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "../components/Header";
 import { api } from "../api";
+import toast from "react-hot-toast";
 
 export default function Cart() {
   const { cart, updateItem, removeItem, clearCart } = useCart();
@@ -28,25 +29,27 @@ export default function Cart() {
   const handleCheckout = async () => {
     // Validate required fields
     if (!checkoutData.deliveryAddress.street.trim()) {
-      alert("Please enter street address");
+      toast.error("Please enter street address");
       return;
     }
     if (!checkoutData.deliveryAddress.city.trim()) {
-      alert("Please enter city");
+      toast.error("Please enter city");
       return;
     }
     if (!checkoutData.deliveryAddress.state.trim()) {
-      alert("Please enter state");
+      toast.error("Please enter state");
       return;
     }
     if (!checkoutData.deliveryAddress.zipCode.trim()) {
-      alert("Please enter ZIP code");
+      toast.error("Please enter ZIP code");
       return;
     }
     if (!checkoutData.phoneNumber.trim()) {
-      alert("Please enter phone number");
+      toast.error("Please enter phone number");
       return;
     }
+
+    const toastId = toast.loading("Placing your order...");
 
     try {
       setLoading(true);
@@ -54,17 +57,21 @@ export default function Cart() {
       const { data } = await api.post("/orders", checkoutData);
 
       if (data.success) {
+        toast.success("Order placed successfully! 🎉", { id: toastId });
         setShowCheckoutModal(false);
         // Navigate to orders page
-        window.location.href = "/my-orders";
+        setTimeout(() => {
+          window.location.href = "/my-orders";
+        }, 1000); // Small delay to show success message
       } else {
-        alert(data.message || "Failed to place order");
+        toast.error(data.message || "Failed to place order", { id: toastId });
       }
     } catch (error) {
       console.error("Checkout error:", error);
-      alert(
+      toast.error(
         error.response?.data?.message ||
-          "Failed to place order. Please try again."
+          "Failed to place order. Please try again.",
+        { id: toastId }
       );
     } finally {
       setLoading(false);

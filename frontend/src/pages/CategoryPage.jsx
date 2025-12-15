@@ -3,6 +3,7 @@ import { api } from "../api";
 import SweetCard from "../components/SweetCard";
 import { useParams } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import toast from "react-hot-toast";
 
 export default function CategoryPage() {
   const { category } = useParams();
@@ -11,11 +12,28 @@ export default function CategoryPage() {
   const [sweets, setSweets] = useState([]);
 
   useEffect(() => {
-    setLoading(true); // Add loading state
-    api.get(`/sweets/category/${category}`).then((res) => {
-      setSweets(res.data.data);
-      setLoading(false);
-    });
+    setLoading(true);
+
+    api
+      .get(`/sweets/category/${category}`)
+      .then((res) => {
+        setSweets(res.data.data);
+        // Optional: Only show if no items found
+        if (res.data.data.length === 0) {
+          toast.info(`No sweets found in ${category} category`);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching category sweets:", error);
+        toast.error(
+          error.response?.data?.message ||
+            `Failed to load ${category} sweets. Please try again.`
+        );
+        setSweets([]); // Reset sweets on error
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [category, refreshTrigger]);
 
   return (
