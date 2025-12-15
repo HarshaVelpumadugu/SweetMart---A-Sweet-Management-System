@@ -7,7 +7,7 @@ import { Star, ArrowLeft } from "lucide-react";
 export default function SweetDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { addItem } = useCart();
+  const { addItem, refreshTrigger } = useCart();
   const [sweet, setSweet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [rating, setRating] = useState(5);
@@ -19,7 +19,7 @@ export default function SweetDetailPage() {
       setSweet(res.data.data);
       setLoading(false);
     });
-  }, [id]);
+  }, [id, refreshTrigger]);
 
   const handleAddToCart = async () => {
     try {
