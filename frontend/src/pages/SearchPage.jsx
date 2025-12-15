@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { api } from "../api";
 import SweetCard from "../components/SweetCard";
+import { useCart } from "../context/CartContext";
 import {
   Home,
   Search,
