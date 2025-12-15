@@ -13,6 +13,8 @@ import Cart from "./pages/Cart.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import SweetDetailPage from "./pages/SweetDetail.jsx";
 import SearchPage from "./pages/SearchPage.jsx";
+import AdminOrders from "./pages/AdminOrderPage.jsx";
+import MyOrders from "./pages/UserOrdersPage.jsx";
 
 export default function App() {
   return (
@@ -20,54 +22,68 @@ export default function App() {
       <CartProvider>
         <BrowserRouter>
           <Header />
-          <div>
-            <Routes>
-              {/* Public Pages */}
-              <Route path="/" element={<Home />} />
-              <Route path="/category/:category" element={<CategoryPage />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/sweet/:id" element={<SweetDetailPage />} />
-              <Route path="/search" element={<SearchPage />} />
+          <Routes>
+            {/* Public Pages */}
+            <Route path="/" element={<Home />} />
+            <Route path="/category/:category" element={<CategoryPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/sweet/:id" element={<SweetDetailPage />} />
+            <Route path="/search" element={<SearchPage />} />
 
-              {/* Protected Admin Routes */}
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute roles={["admin", "owner"]}>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
+            {/* Protected Admin Routes */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute roles={["admin", "owner"]}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/orders"
+              element={
+                <ProtectedRoute roles={["admin", "owner"]}>
+                  <AdminOrders />
+                </ProtectedRoute>
+              }
+            />
 
-              <Route
-                path="/admin/sweet/new"
-                element={
-                  <ProtectedRoute roles={["admin", "owner"]}>
-                    <SweetForm />
-                  </ProtectedRoute>
-                }
-              />
+            <Route
+              path="/admin/sweet/new"
+              element={
+                <ProtectedRoute roles={["admin", "owner"]}>
+                  <SweetForm />
+                </ProtectedRoute>
+              }
+            />
 
-              <Route
-                path="/admin/sweet/:id"
-                element={
-                  <ProtectedRoute roles={["admin", "owner"]}>
-                    <SweetForm />
-                  </ProtectedRoute>
-                }
-              />
+            <Route
+              path="/admin/sweet/:id"
+              element={
+                <ProtectedRoute roles={["admin", "owner"]}>
+                  <SweetForm />
+                </ProtectedRoute>
+              }
+            />
 
-              <Route
-                path="/cart"
-                element={
-                  <ProtectedRoute roles={["user", "admin", "owner"]}>
-                    <Cart />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </div>
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute roles={["user"]}>
+                  <Cart />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-orders"
+              element={
+                <ProtectedRoute roles={["user"]}>
+                  <MyOrders />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
         </BrowserRouter>
       </CartProvider>
     </AuthProvider>

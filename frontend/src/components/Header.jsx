@@ -1,6 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { ShoppingCart, Menu, X, LogOut, ShieldCheck } from "lucide-react";
+import {
+  ShoppingCart,
+  Menu,
+  X,
+  LogOut,
+  ShieldCheck,
+  Package,
+} from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
 
@@ -92,6 +99,15 @@ const Header = () => {
 
   // Check if user is a regular user (not admin or owner)
   const isRegularUser = user && user.role === "user";
+  const isAdminOrOwner =
+    user && (user.role === "admin" || user.role === "owner");
+
+  // Get orders link based on user role
+  const getOrdersLink = () => {
+    if (isRegularUser) return "/my-orders";
+    if (isAdminOrOwner) return "/admin/orders";
+    return "/login";
+  };
 
   return (
     <header
@@ -136,19 +152,36 @@ const Header = () => {
             >
               Search
             </Link>
+
+            {/* Orders Link - Desktop */}
+            {user && (
+              <Link
+                to={getOrdersLink()}
+                className="font-medium text-gray-700 hover:text-green-700 active:text-green-800 transition-colors"
+              >
+                Orders
+              </Link>
+            )}
           </nav>
 
           {/* ACTIONS */}
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
-                {(user?.role === "admin" || user?.role === "owner") && (
+                {isAdminOrOwner && (
                   <Link to="/admin">
                     <Button variant="ghost" size="icon">
                       <ShieldCheck className="h-5 w-5 text-green-700" />
                     </Button>
                   </Link>
                 )}
+
+                {/* Orders Icon */}
+                <Link to={getOrdersLink()}>
+                  <Button variant="ghost" size="icon">
+                    <Package className="h-5 w-5" />
+                  </Button>
+                </Link>
 
                 {/* CART - Only show for regular users */}
                 {isRegularUser && (
@@ -240,7 +273,7 @@ const Header = () => {
 
               {user ? (
                 <>
-                  {(user?.role === "admin" || user?.role === "owner") && (
+                  {isAdminOrOwner && (
                     <Link
                       to="/admin"
                       className="px-4 py-2 font-medium text-gray-700 hover:text-green-700 flex items-center gap-2"
@@ -250,6 +283,18 @@ const Header = () => {
                       <span>Admin Dashboard</span>
                     </Link>
                   )}
+
+                  {/* Orders Link - Mobile */}
+                  <Link
+                    to={getOrdersLink()}
+                    className="px-4 py-2 font-medium text-gray-700 hover:text-green-700 flex items-center gap-2"
+                    onClick={closeMobileMenu}
+                  >
+                    <Package className="h-5 w-5" />
+                    <span>
+                      {isRegularUser ? "My Orders" : "Orders Management"}
+                    </span>
+                  </Link>
 
                   {/* CART - Only show for regular users */}
                   {isRegularUser && (

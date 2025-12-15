@@ -46,9 +46,14 @@ exports.createOrder = async (req, res) => {
       price: item.price,
       imageUrl: item.sweet.imageUrl,
     }));
-
+    const orderNumber =
+      "ORD-" +
+      Date.now() +
+      "-" +
+      Math.random().toString(36).substr(2, 9).toUpperCase();
     // Create order
     const order = await Order.create({
+      orderNumber,
       user: req.user.id,
       items: orderItems,
       totalPrice: cart.totalPrice,
