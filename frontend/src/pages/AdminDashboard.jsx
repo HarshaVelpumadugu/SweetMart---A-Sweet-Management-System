@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { api } from "../api";
 
 export default function AdminDashboard() {
@@ -14,12 +15,12 @@ export default function AdminDashboard() {
         Admin Dashboard
       </h1>
 
-      <a
+      <Link
+        to="/admin/sweet/new"
         className="inline-block bg-green-700 text-white px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl text-base sm:text-lg font-semibold hover:bg-green-800 transition-colors"
-        href="/admin/sweet/new"
       >
         + Add Sweet
-      </a>
+      </Link>
 
       <div className="mt-6 sm:mt-8 md:mt-10 bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-4 sm:p-6 md:p-8 overflow-x-auto">
         {/* Desktop Table View */}
@@ -40,12 +41,12 @@ export default function AdminDashboard() {
                 <td>{s.category}</td>
                 <td>{s.quantity}</td>
                 <td>
-                  <a
-                    href={`/admin/sweet/${s._id}`}
+                  <Link
+                    to={`/admin/sweet/${s._id}`}
                     className="text-blue-600 hover:text-blue-800 mr-4"
                   >
                     Edit
-                  </a>
+                  </Link>
                   <button
                     className="text-red-600 hover:text-red-800"
                     onClick={() =>
@@ -81,12 +82,12 @@ export default function AdminDashboard() {
                 </div>
               </div>
               <div className="flex gap-3">
-                <a
-                  href={`/admin/sweet/${s._id}`}
+                <Link
+                  to={`/admin/sweet/${s._id}`}
                   className="flex-1 text-center bg-blue-600 text-white py-2 rounded-lg text-sm font-semibold hover:bg-blue-700"
                 >
                   Edit
-                </a>
+                </Link>
                 <button
                   className="flex-1 bg-red-600 text-white py-2 rounded-lg text-sm font-semibold hover:bg-red-700"
                   onClick={() =>
