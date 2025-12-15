@@ -59,9 +59,19 @@ export default function SearchPage() {
     { value: "price_desc", label: "Price: High to Low" },
   ];
 
+  const { refreshTrigger } = useCart();
+
   useEffect(() => {
     fetchSweets();
-  }, [searchQuery, selectedCategory, sortBy, minPrice, maxPrice, currentPage]);
+  }, [
+    searchQuery,
+    selectedCategory,
+    sortBy,
+    minPrice,
+    maxPrice,
+    currentPage,
+    refreshTrigger,
+  ]);
 
   useEffect(() => {
     if (showTopRated) {
@@ -356,3 +366,4 @@ export default function SearchPage() {
     </div>
   );
 }
+
