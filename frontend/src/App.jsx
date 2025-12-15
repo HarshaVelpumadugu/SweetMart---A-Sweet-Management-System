@@ -22,7 +22,15 @@ export default function App() {
     <AuthProvider>
       <CartProvider>
         <BrowserRouter>
-          <Toaster />
+          <Toaster
+  position="top-right"
+  toastOptions={{
+    duration: 3000,
+    style: {
+      fontSize: "14px",
+    },
+  }}
+/>
           <Header />
           <Routes>
             {/* Public Pages */}
