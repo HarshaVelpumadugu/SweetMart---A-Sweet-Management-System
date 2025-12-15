@@ -67,6 +67,15 @@ const Header = () => {
     navigate("/");
   };
 
+  const scrollToCategories = (e) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+    const element = document.getElementById("categories");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   // Smooth scroll to top function
   const scrollToTop = () => {
     window.scrollTo({
@@ -119,7 +128,8 @@ const Header = () => {
 
             <a
               href="#categories"
-              className="font-medium text-gray-700 hover:text-green-700 active:text-green-800 transition-colors"
+              onClick={scrollToCategories}
+              className="font-medium text-gray-700 hover:text-green-700 active:text-green-800 transition-colors cursor-pointer"
             >
               Explore
             </a>
@@ -209,8 +219,8 @@ const Header = () => {
 
               <a
                 href="#categories"
-                className="px-4 py-2 font-medium text-gray-700 hover:text-green-700 active:text-green-800 transition-colors"
-                onClick={closeMobileMenu}
+                onClick={scrollToCategories}
+                className="px-4 py-2 font-medium text-gray-700 hover:text-green-700 active:text-green-800 transition-colors cursor-pointer"
               >
                 Explore
               </a>
