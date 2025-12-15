@@ -2,6 +2,7 @@ import { useState } from "react";
 import { api } from "../api";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -11,6 +12,7 @@ export default function Register() {
     role: "user",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const submit = async (e) => {
     e.preventDefault();
@@ -25,8 +27,8 @@ export default function Register() {
         duration: 4000,
       });
       setTimeout(() => {
-        window.location.href = "/login";
-      }, 1500); // Increased from 1000ms to give user time to see toast
+        navigate("/login");
+      }, 2000);
     } catch (error) {
       console.error("Registration error:", error);
       toast.error(

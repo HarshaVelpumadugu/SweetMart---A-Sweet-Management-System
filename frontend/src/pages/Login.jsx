@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const submit = async (e) => {
     e.preventDefault();
@@ -16,7 +18,7 @@ export default function Login() {
 
     try {
       await login(form.email, form.password);
-      window.location.href = "/";
+      navigate("/");
     } catch (error) {
       // Error is already handled in AuthContext with toast
       setIsSubmitting(false);
