@@ -21,15 +21,20 @@ export default function Register() {
 
     try {
       await api.post("/auth/register", form);
-      toast.success("Account created successfully! Please login. 🎉");
+      toast.success("Account created successfully! Please login. 🎉", {
+        duration: 4000,
+      });
       setTimeout(() => {
         window.location.href = "/login";
-      }, 1000);
+      }, 1500); // Increased from 1000ms to give user time to see toast
     } catch (error) {
       console.error("Registration error:", error);
       toast.error(
         error.response?.data?.message ||
-          "Failed to create account. Please try again."
+          "Failed to create account. Please try again.",
+        {
+          duration: 5000,
+        }
       );
       setIsSubmitting(false);
     }

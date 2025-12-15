@@ -18,7 +18,6 @@ export function AuthProvider({ children }) {
         })
         .catch((error) => {
           console.error("Auth verification failed:", error);
-          // Silent fail - don't show toast for automatic auth checks
           localStorage.removeItem("sweetmart_token");
           setUser(null);
         })
@@ -37,14 +36,19 @@ export function AuthProvider({ children }) {
       const me = await api.get("/auth/me");
       setUser(me.data.data);
 
-      toast.success(`Welcome back, ${me.data.data.name || "User"}! 👋`);
+      toast.success(`Welcome back, ${me.data.data.name || "User"}! 👋`, {
+        duration: 4000,
+      });
     } catch (error) {
       console.error("Login error:", error);
       toast.error(
         error.response?.data?.message ||
-          "Invalid email or password. Please try again."
+          "Invalid email or password. Please try again.",
+        {
+          duration: 5000,
+        }
       );
-      throw error; // Re-throw to handle in component
+      throw error;
     }
   };
 
@@ -52,14 +56,19 @@ export function AuthProvider({ children }) {
   const register = async (payload) => {
     try {
       await api.post("/auth/register", payload);
-      toast.success("Account created successfully! Please login. 🎉");
+      toast.success("Account created successfully! Please login. 🎉", {
+        duration: 4000,
+      });
     } catch (error) {
       console.error("Registration error:", error);
       toast.error(
         error.response?.data?.message ||
-          "Failed to create account. Please try again."
+          "Failed to create account. Please try again.",
+        {
+          duration: 5000,
+        }
       );
-      throw error; // Re-throw to handle in component
+      throw error;
     }
   };
 
@@ -67,7 +76,9 @@ export function AuthProvider({ children }) {
   const logout = () => {
     localStorage.removeItem("sweetmart_token");
     setUser(null);
-    toast.success("Logged out successfully. See you soon! 👋");
+    toast.success("Logged out successfully. See you soon! 👋", {
+      duration: 3000,
+    });
     window.location.href = "/";
   };
 

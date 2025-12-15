@@ -34,9 +34,9 @@ export default function AdminOrders() {
         setTotalPages(data.totalPages);
         setTotalOrders(data.total);
         // Only show success toast on initial load (page 1) to avoid spam
-        if (currentPage === 1 && filter === "all" && !dateFilter.start) {
-          toast.success(`Loaded ${data.total} orders successfully`);
-        }
+        // if (currentPage === 1 && filter === "all" && !dateFilter.start) {
+        //   toast.success(`Loaded ${data.total} orders successfully`);
+        // }
       }
     } catch (error) {
       console.error("Error fetching orders:", error);

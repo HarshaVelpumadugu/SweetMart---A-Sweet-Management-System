@@ -23,18 +23,18 @@ export default function App() {
       <CartProvider>
         <BrowserRouter>
           <Toaster
-  position="top-right"
-  containerStyle={{
-    top: 100,     
-    right: 20,  
-  }}
-  toastOptions={{
-    duration: 7000,
-    style: {
-      fontSize: "18px",
-    },
-  }}
-/>
+            position="top-right"
+            containerStyle={{
+              top: 120,
+              right: 20,
+            }}
+            toastOptions={{
+              duration: 3000,
+              style: {
+                fontSize: "18px",
+              },
+            }}
+          />
           <Header />
           <Routes>
             {/* Public Pages */}
