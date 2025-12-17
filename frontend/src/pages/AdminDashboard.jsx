@@ -11,7 +11,6 @@ export default function AdminDashboard() {
       .get("/sweets")
       .then((res) => {
         setSweets(res.data.data);
-        toast.success("Sweets loaded successfully!");
       })
       .catch((error) => {
         toast.error("Failed to load sweets. Please try again.");

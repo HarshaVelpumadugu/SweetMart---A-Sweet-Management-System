@@ -79,7 +79,6 @@ export function AuthProvider({ children }) {
     toast.success("Logged out successfully. See you soon! 👋", {
       duration: 3000,
     });
-    window.location.href = "/";
   };
 
   return (

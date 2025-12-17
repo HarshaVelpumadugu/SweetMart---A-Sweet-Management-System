@@ -3,6 +3,20 @@ import { api } from "../api";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
+/* ---------------- CATEGORY OPTIONS ---------------- */
+const CATEGORY_OPTIONS = [
+  "cake",
+  "chocolate",
+  "lollipops",
+  "icecream",
+  "pudding",
+  "pancakes",
+  "doughnut",
+  "cupcake",
+  "cookies",
+  "waffle",
+];
+
 export default function SweetForm() {
   const { id } = useParams();
   const edit = Boolean(id);
@@ -29,26 +43,25 @@ export default function SweetForm() {
   const fieldTypes = {
     name: "text",
     price: "number",
-    category: "text",
     quantity: "number",
     imageUrl: "url",
     description: "textarea",
   };
 
+  /* ---------------- FETCH SWEET (EDIT MODE) ---------------- */
   useEffect(() => {
     if (edit && id) {
       api
         .get(`/sweets/${id}`)
         .then((res) => {
-          const sweetData = res.data.data;
-          // Only extract the fields we want in the form
+          const sweet = res.data.data;
           setForm({
-            name: sweetData.name || "",
-            price: sweetData.price || "",
-            category: sweetData.category || "",
-            quantity: sweetData.quantity || "",
-            imageUrl: sweetData.imageUrl || "",
-            description: sweetData.description || "",
+            name: sweet.name || "",
+            price: sweet.price || "",
+            category: sweet.category || "",
+            quantity: sweet.quantity || "",
+            imageUrl: sweet.imageUrl || "",
+            description: sweet.description || "",
           });
         })
         .catch((error) => {
@@ -56,11 +69,12 @@ export default function SweetForm() {
           toast.error(
             error.response?.data?.message || "Failed to load sweet details"
           );
-          navigate("/admin"); // Redirect to admin if sweet not found
+          navigate("/admin");
         });
     }
-  }, [edit, id]);
+  }, [edit, id, navigate]);
 
+  /* ---------------- SUBMIT ---------------- */
   const submit = async (e) => {
     e.preventDefault();
 
@@ -71,65 +85,80 @@ export default function SweetForm() {
     try {
       if (edit) {
         await api.put(`/sweets/${id}`, form);
-        toast.success("Sweet updated successfully! 🎉", { id: toastId });
+        toast.success("Sweet updated successfully!", { id: toastId });
       } else {
         await api.post("/sweets", form);
-        toast.success("Sweet created successfully! 🎉", { id: toastId });
+        toast.success("Sweet created successfully!", { id: toastId });
       }
 
-      setTimeout(() => {
-        navigate("/admin");
-      }, 1000); // Small delay to show success message
+      setTimeout(() => navigate("/admin"), 1000);
     } catch (err) {
-      console.log("Backend Error:", err.response?.data);
+      console.error("Backend Error:", err.response?.data);
       toast.error(
         err.response?.data?.message ||
-          `Failed to ${edit ? "update" : "create"} sweet. Please try again.`,
+          `Failed to ${edit ? "update" : "create"} sweet`,
         { id: toastId }
       );
     }
   };
 
+  /* ---------------- UI ---------------- */
   return (
-    <div className="pt-20 sm:pt-24 md:pt-28 lg:pt-32 px-4 sm:px-6 md:px-10 lg:px-14 pb-12 sm:pb-16 md:pb-20">
-      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-green-800 mb-6 sm:mb-8 md:mb-10">
+    <div className="pt-20 sm:pt-24 md:pt-28 lg:pt-32 px-4 sm:px-6 md:px-10 lg:px-14 pb-12">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-green-800 mb-6">
         {edit ? "Edit Sweet" : "Add Sweet"}
       </h1>
 
       <form
-        className="bg-white shadow-lg sm:shadow-xl p-6 sm:p-8 md:p-10 rounded-xl sm:rounded-2xl w-full max-w-2xl"
         onSubmit={submit}
+        className="bg-white shadow-lg p-6 sm:p-8 md:p-10 rounded-xl w-full max-w-2xl"
       >
-        <div className="space-y-4 sm:space-y-5">
+        <div className="space-y-5">
           {Object.keys(form).map((field) => (
             <div key={field}>
-              <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
-                {fieldLabels[field] || field}
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {fieldLabels[field]}
               </label>
-              {fieldTypes[field] === "textarea" ? (
+
+              {/* CATEGORY DROPDOWN */}
+              {field === "category" ? (
+                <select
+                  className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+                  value={form.category}
+                  onChange={(e) =>
+                    setForm({ ...form, category: e.target.value })
+                  }
+                  required
+                >
+                  <option value="">Select Category</option>
+                  {CATEGORY_OPTIONS.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              ) : fieldTypes[field] === "textarea" ? (
                 <textarea
-                  className="w-full border border-gray-300 p-3 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all resize-none"
-                  placeholder={`Enter ${fieldLabels[field] || field}`}
+                  className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+                  rows={4}
                   value={form[field]}
                   onChange={(e) =>
                     setForm({ ...form, [field]: e.target.value })
                   }
-                  rows={4}
                   required
                 />
               ) : (
                 <input
-                  className="w-full border border-gray-300 p-3 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
-                  placeholder={`Enter ${fieldLabels[field] || field}`}
-                  type={fieldTypes[field] || "text"}
+                  className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  type={fieldTypes[field]}
                   value={form[field]}
                   onChange={(e) =>
                     setForm({ ...form, [field]: e.target.value })
                   }
-                  step={field === "price" ? "0.01" : undefined}
                   min={
                     field === "price" || field === "quantity" ? "0" : undefined
                   }
+                  step={field === "price" ? "0.01" : undefined}
                   required
                 />
               )}
@@ -137,16 +166,17 @@ export default function SweetForm() {
           ))}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6 sm:mt-8">
+        <div className="flex gap-4 mt-8">
           <button
             type="submit"
-            className="flex-1 bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-lg sm:rounded-xl text-base sm:text-lg font-semibold transition-colors duration-200 active:scale-95 transform"
+            className="flex-1 bg-green-700 hover:bg-green-800 text-white py-3 rounded-lg font-semibold transition"
           >
             {edit ? "Save Changes" : "Create Sweet"}
           </button>
+
           <Link
             to="/admin"
-            className="flex-1 text-center bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg sm:rounded-xl text-base sm:text-lg font-semibold transition-colors duration-200"
+            className="flex-1 text-center bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 rounded-lg font-semibold transition"
           >
             Cancel
           </Link>

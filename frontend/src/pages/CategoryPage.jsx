@@ -18,18 +18,16 @@ export default function CategoryPage() {
       .get(`/sweets/category/${category}`)
       .then((res) => {
         setSweets(res.data.data);
-        // Optional: Only show if no items found
         if (res.data.data.length === 0) {
-          toast.info(`No sweets found in ${category} category`);
+          toast(`No sweets found in ${category} category`, {
+            icon: "ℹ️",
+            id: "no-sweets-toast",
+          });
         }
       })
       .catch((error) => {
         console.error("Error fetching category sweets:", error);
-        toast.error(
-          error.response?.data?.message ||
-            `Failed to load ${category} sweets. Please try again.`
-        );
-        setSweets([]); // Reset sweets on error
+        setSweets([]);
       })
       .finally(() => {
         setLoading(false);

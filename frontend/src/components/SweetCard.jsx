@@ -1,17 +1,33 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import { Star } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function SweetCard({ item }) {
   const { addItem } = useCart();
+  const { isAuthenticated, role } = useAuth();
   const navigate = useNavigate();
 
-  const addToCartHandler = async () => {
+  const addToCartHandler = async (e) => {
+    e.stopPropagation();
+
+    if (!isAuthenticated) {
+      toast.error("Please login to add items to cart");
+      navigate("/login");
+      return;
+    }
+    if (role === "admin" || role === "owner") {
+      toast.error("Admins and owners cannot add items to cart");
+      return;
+    }
     try {
       await addItem(item._id, 1);
+      toast.success("Item added to cart");
     } catch (error) {
       console.error("Add to cart error:", error);
+      toast.error("Failed to add item to cart");
     }
   };
 
@@ -21,8 +37,8 @@ export default function SweetCard({ item }) {
       whileHover={{ scale: 1.03 }}
       onClick={() => navigate(`/sweet/${item._id}`)}
     >
-      {/* Rating Badge - Top Right */}
-      {item.rating && item.rating.count > 0 && (
+      {/* Rating Badge */}
+      {item.rating?.count > 0 && (
         <div className="absolute top-5 right-5 bg-green-700 text-white px-2 py-1 rounded-lg flex items-center gap-1 shadow-md z-10">
           <Star className="w-4 h-4 fill-white" />
           <span className="text-sm font-bold">
@@ -43,7 +59,6 @@ export default function SweetCard({ item }) {
       <div className="flex items-center justify-between mt-2">
         <p className="font-semibold text-base">₹{item.price}</p>
 
-        {/* Quantity Badge */}
         <div className="flex items-center gap-1 text-sm">
           <span className="text-gray-600 font-medium">Stock:</span>
           <span
@@ -60,18 +75,14 @@ export default function SweetCard({ item }) {
         </div>
       </div>
 
-      {/* Rating Count */}
-      {item.rating && item.rating.count > 0 && (
+      {item.rating?.count > 0 && (
         <p className="text-xs text-gray-500 mt-1">
           ({item.rating.count} {item.rating.count === 1 ? "review" : "reviews"})
         </p>
       )}
 
       <button
-        onClick={(e) => {
-          e.stopPropagation();
-          addToCartHandler();
-        }}
+        onClick={addToCartHandler}
         disabled={item.quantity === 0}
         className={`mt-3 w-full py-2 rounded-lg text-sm font-semibold text-white transition-colors ${
           item.quantity === 0

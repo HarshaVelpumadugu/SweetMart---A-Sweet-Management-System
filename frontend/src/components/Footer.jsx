@@ -59,12 +59,12 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/categories"
+                <a
+                  href="#categories"
                   className="text-background/70 hover:text-primary transition-colors"
                 >
                   Categories
-                </Link>
+                </a>
               </li>
               <li>
                 <a

@@ -76,7 +76,6 @@ const Header = () => {
     }
   };
 
-  // Smooth scroll to top function
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -85,24 +84,20 @@ const Header = () => {
     setIsMobileMenuOpen(false);
   };
 
-  // Handle logo/home click
   const handleHomeClick = (e) => {
     e.preventDefault();
     navigate("/");
     scrollToTop();
   };
 
-  // Close mobile menu when clicking on any link
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
   };
 
-  // Check if user is a regular user (not admin or owner)
   const isRegularUser = user && user.role === "user";
   const isAdminOrOwner =
     user && (user.role === "admin" || user.role === "owner");
 
-  // Get orders link based on user role
   const getOrdersLink = () => {
     if (isRegularUser) return "/my-orders";
     if (isAdminOrOwner) return "/admin/orders";
@@ -137,14 +132,6 @@ const Header = () => {
             >
               Home
             </Link>
-
-            <a
-              href="#categories"
-              onClick={scrollToCategories}
-              className="font-medium text-gray-700 hover:text-green-700 active:text-green-800 transition-colors cursor-pointer"
-            >
-              Explore
-            </a>
 
             <Link
               to="/search"
@@ -254,14 +241,6 @@ const Header = () => {
               >
                 Home
               </Link>
-
-              <a
-                href="#categories"
-                onClick={scrollToCategories}
-                className="px-4 py-2 font-medium text-gray-700 hover:text-green-700 active:text-green-800 transition-colors cursor-pointer"
-              >
-                Explore
-              </a>
 
               <Link
                 to="/search"
