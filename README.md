@@ -49,7 +49,3 @@ The project is divided into two main components:
 | **Frontend** | React |
 | **Deployment** | Render (for both Frontend and Backend) |
 | **AI Tools** | Claude, ChatGPT, Lovable |
-
-    # Configure API base URL if necessary
-    npm start
-    ```
